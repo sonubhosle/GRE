@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import { Spinner } from '../../components/common/Spinner';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Users, CircleDollarSign, Star, BookOpen, Plus } from 'lucide-react';
+import { Users, CircleDollarSign, Star, BookOpen, Plus, Loader2 } from 'lucide-react';
 
 const TeacherDashboard = () => {
     const { user } = useSelector((state) => state.auth);
@@ -24,7 +24,11 @@ const TeacherDashboard = () => {
         fetchStats();
     }, []);
 
-    if (loading) return <div className="h-screen flex items-center justify-center"><Spinner /></div>;
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center bg-white">
+            <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
+        </div>
+    );
 
     const chartData = stats?.monthlyRevenue?.map(item => ({
         name: `${item._id.month}/${item._id.year}`,
@@ -33,115 +37,165 @@ const TeacherDashboard = () => {
     })) || [];
 
     return (
-        <div className="container py-12">
-            <div className="flex justify-between items-end mb-12 fade-in-up">
-                <div>
-                    <h1 className="text-4xl font-bold mb-2 text-white">Teacher Dashboard</h1>
-                    <p className="text-text-muted">Manage your courses and track your performance.</p>
+        <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 animate-fade-in-up">
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-bold mb-3 text-slate-900 leading-tight">Teacher <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Dashboard</span></h1>
+                        <p className="text-slate-500 font-medium text-lg">Track your growth and manage your curriculum with ease.</p>
+                    </div>
+                    <Link to="/teacher/courses/create" className="inline-flex bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-indigo-500/20 transition-all active:scale-95 gap-3 items-center whitespace-nowrap">
+                        <Plus size={20} /> Create new course
+                    </Link>
                 </div>
-                <Link to="/teacher/courses/create" className="btn-primary gap-2">
-                    <Plus className="w-5 h-5" /> Create New Course
-                </Link>
-            </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 fade-in-up" style={{ animationDelay: '0.1s' }}>
-                <div className="card p-6 bg-primary/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary text-2xl"><Users /></div>
-                    <div><p className="text-2xl font-bold">{stats?.totalStudents || 0}</p><p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Total Students</p></div>
-                </div>
-                <div className="card p-6 bg-accent/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center text-accent text-2xl"><CircleDollarSign /></div>
-                    <div><p className="text-2xl font-bold">₹{stats?.totalRevenue || 0}</p><p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Total Revenue</p></div>
-                </div>
-                <div className="card p-6 bg-secondary/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center text-secondary text-2xl"><Star /></div>
-                    <div><p className="text-2xl font-bold">{stats?.avgRating || 0}</p><p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Avg Rating</p></div>
-                </div>
-                <div className="card p-6 bg-white/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-white text-2xl"><BookOpen /></div>
-                    <div><p className="text-2xl font-bold">{stats?.totalCourses || 0}</p><p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Active Courses</p></div>
-                </div>
-            </div>
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16 animate-fade-in-up delay-100">
+                    <div className="group p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500 opacity-0 rounded-full -mr-16 -mt-16 blur-3xl group-hover:opacity-[0.03] transition-opacity"></div>
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                                <Users size={28} />
+                            </div>
+                            <div>
+                                <p className="text-3xl font-bold text-slate-900">{stats?.totalStudents || 0}</p>
+                                <p className="text-[11px] font-bold text-slate-400">Total students</p>
+                            </div>
+                        </div>
+                    </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                {/* Revenue Chart */}
-                <div className="card p-8 fade-in-up" style={{ animationDelay: '0.2s' }}>
-                    <h3 className="text-xl font-bold mb-8">Revenue Growth</h3>
-                    <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={chartData}>
-                                <defs>
-                                    <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#2d2d3f" vertical={false} />
-                                <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                                <Tooltip
-                                    contentStyle={{ background: '#1a1a2e', border: '1px solid #2d2d3f', borderRadius: '12px' }}
-                                    itemStyle={{ color: '#f8fafc' }}
-                                />
-                                <Area type="monotone" dataKey="revenue" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                    <div className="group p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 opacity-0 rounded-full -mr-16 -mt-16 blur-3xl group-hover:opacity-[0.03] transition-opacity"></div>
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                                <CircleDollarSign size={28} />
+                            </div>
+                            <div>
+                                <p className="text-3xl font-bold text-slate-900">₹{stats?.totalRevenue || 0}</p>
+                                <p className="text-[11px] font-bold text-slate-400">Total revenue</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="group p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500 opacity-0 rounded-full -mr-16 -mt-16 blur-3xl group-hover:opacity-[0.03] transition-opacity"></div>
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                                <Star size={28} />
+                            </div>
+                            <div>
+                                <p className="text-3xl font-bold text-slate-900">{stats?.avgRating || 0}</p>
+                                <p className="text-[11px] font-bold text-slate-400">Avg rating</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="group p-8 rounded-[2.5rem] bg-white border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500 opacity-0 rounded-full -mr-16 -mt-16 blur-3xl group-hover:opacity-[0.03] transition-opacity"></div>
+                        <div className="flex items-center gap-6">
+                            <div className="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform duration-500 shadow-sm">
+                                <BookOpen size={28} />
+                            </div>
+                            <div>
+                                <p className="text-3xl font-bold text-slate-900">{stats?.totalCourses || 0}</p>
+                                <p className="text-[11px] font-bold text-slate-400">Active courses</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Enrollments Chart */}
-                <div className="card p-8 fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    <h3 className="text-xl font-bold mb-8">Monthly Enrollments</h3>
-                    <div className="h-[300px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={chartData}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#2d2d3f" vertical={false} />
-                                <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-                                <Tooltip
-                                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                                    contentStyle={{ background: '#1a1a2e', border: '1px solid #2d2d3f', borderRadius: '12px' }}
-                                />
-                                <Bar dataKey="enrollments" fill="#10b981" radius={[4, 4, 0, 0]} barSize={40} />
-                            </BarChart>
-                        </ResponsiveContainer>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+                    {/* Revenue Chart */}
+                    <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm animate-fade-in-up delay-200">
+                        <h3 className="text-2xl font-bold text-slate-900 mb- aggregation">Revenue growth</h3>
+                        <div className="h-[350px] mt-8">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={chartData}>
+                                    <defs>
+                                        <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                                    <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dx={-10} />
+                                    <Tooltip
+                                        contentStyle={{ background: '#fff', border: 'none', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)' }}
+                                        itemStyle={{ color: '#1e293b', fontWeight: 'bold' }}
+                                    />
+                                    <Area type="monotone" dataKey="revenue" stroke="#6366f1" strokeWidth={4} fillOpacity={1} fill="url(#colorRev)" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    {/* Enrollments Chart */}
+                    <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm animate-fade-in-up delay-300">
+                        <h3 className="text-2xl font-bold text-slate-900 mb-8">Monthly enrollments</h3>
+                        <div className="h-[350px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={chartData}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                                    <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} dx={-10} />
+                                    <Tooltip
+                                        cursor={{ fill: '#f8fafc', radius: 12 }}
+                                        contentStyle={{ background: '#fff', border: 'none', borderRadius: '1.5rem', boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)' }}
+                                    />
+                                    <Bar dataKey="enrollments" fill="#10b981" radius={[12, 12, 0, 0]} barSize={40} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Course Performance Table */}
-            <div className="card overflow-hidden fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <div className="p-8 border-b border-border flex justify-between items-center">
-                    <h3 className="text-xl font-bold">Course Performance</h3>
-                    <Link to="/teacher/courses" className="text-primary text-sm font-bold hover:underline">View All</Link>
-                </div>
-                <div className="overflow-x-auto">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Course Name</th>
-                                <th>Enrolled</th>
-                                <th>Revenue</th>
-                                <th>Rating</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {stats?.courseStats?.slice(0, 5).map(c => (
-                                <tr key={c._id}>
-                                    <td className="font-bold text-white">{c.title}</td>
-                                    <td>{c.enrollments}</td>
-                                    <td>₹{c.revenue}</td>
-                                    <td><div className="flex items-center gap-1"><Star size={16} className="text-yellow-500 fill-yellow-500" /> {c.rating}</div></td>
-                                    <td><Link to={`/teacher/courses/edit/${c._id}`} className="text-primary hover:underline font-bold text-xs uppercase tracking-widest">Edit</Link></td>
+                {/* Course Performance Table */}
+                <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden animate-fade-in-up delay-400">
+                    <div className="p-10 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
+                        <h3 className="text-2xl font-bold text-slate-900">Course performance</h3>
+                        <Link to="/teacher/courses" className="text-indigo-600 text-sm font-bold hover:underline">View all courses</Link>
+                    </div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                            <thead>
+                                <tr className="border-b border-slate-50">
+                                    <th className="px-10 py-6 text-[11px] font-bold text-slate-400">Course name</th>
+                                    <th className="px-10 py-6 text-[11px] font-bold text-slate-400">Enrolled</th>
+                                    <th className="px-10 py-6 text-[11px] font-bold text-slate-400">Revenue</th>
+                                    <th className="px-10 py-6 text-[11px] font-bold text-slate-400">Rating</th>
+                                    <th className="px-10 py-6 text-[11px] font-bold text-slate-400 text-right">Action</th>
                                 </tr>
-                            ))}
-                            {(!stats?.courseStats || stats.courseStats.length === 0) && (
-                                <tr><td colSpan="5" className="text-center py-12 text-text-muted">You haven't created any courses yet.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-slate-50">
+                                {stats?.courseStats?.slice(0, 5).map(c => (
+                                    <tr key={c._id} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="px-10 py-6 font-bold text-slate-900">{c.title}</td>
+                                        <td className="px-10 py-6 text-slate-500 font-medium">{c.enrollments} students</td>
+                                        <td className="px-10 py-6 text-slate-900 font-bold">₹{c.revenue}</td>
+                                        <td className="px-10 py-6">
+                                            <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 rounded-full w-fit border border-amber-100 font-bold text-xs">
+                                                <Star size={14} className="fill-current" /> {c.rating}
+                                            </div>
+                                        </td>
+                                        <td className="px-10 py-6 text-right">
+                                            <Link to={`/teacher/courses/edit/${c._id}`} className="text-indigo-600 hover:text-indigo-700 font-bold text-sm">Edit</Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {(!stats?.courseStats || stats.courseStats.length === 0) && (
+                                    <tr>
+                                        <td colSpan="5" className="px-10 py-24 text-center">
+                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-200">
+                                                <BookOpen size={24} />
+                                            </div>
+                                            <p className="text-slate-500 font-medium">You haven't created any courses yet.</p>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

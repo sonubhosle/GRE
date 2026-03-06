@@ -67,11 +67,13 @@ const deleteUser = catchAsync(async (req, res) => {
 
 // ─── Platform Stats ────────────────────────────────────────────────────────
 const getStats = catchAsync(async (req, res) => {
-    const [totalUsers, totalTeachers, totalCourses, payments] = await Promise.all([
+    const [totalStudents, totalTeachers, totalCourses, payments, pendingTeachers, adminCount] = await Promise.all([
         User.countDocuments({ role: 'USER' }),
-        User.countDocuments({ role: 'TEACHER' }),
+        User.countDocuments({ role: 'TEACHER', status: 'active' }),
         Course.countDocuments({ approvalStatus: 'approved' }),
         Payment.find({ status: 'paid' }),
+        User.find({ role: 'TEACHER', status: 'pending' }).select('name email photo specialization experience bio'),
+        User.countDocuments({ role: 'ADMIN' })
     ]);
 
     const totalRevenue = payments.reduce((sum, p) => sum + p.amount, 0);
@@ -92,21 +94,24 @@ const getStats = catchAsync(async (req, res) => {
         { $sort: { '_id.year': 1, '_id.month': 1 } },
     ]);
 
-    // User growth (last 6 months)
-    const userGrowth = await User.aggregate([
-        { $match: { createdAt: { $gte: sixMonthsAgo } } },
-        {
-            $group: {
-                _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } },
-                count: { $sum: 1 },
-            },
-        },
-        { $sort: { '_id.year': 1, '_id.month': 1 } },
-    ]);
+    // Format monthly revenue for charts
+    const formattedMonthlyRevenue = monthlyRevenue.map(item => ({
+        month: new Date(item._id.year, item._id.month - 1).toLocaleString('default', { month: 'short' }),
+        revenue: item.revenue
+    }));
 
     return sendSuccess(res, 200, 'Stats fetched.', {
-        totalUsers, totalTeachers, totalCourses, totalRevenue,
-        monthlyRevenue, userGrowth,
+        totalStudents,
+        totalTeachers,
+        totalCourses,
+        totalRevenue,
+        pendingTeachers,
+        usersCount: {
+            student: totalStudents,
+            teacher: totalTeachers + pendingTeachers.length,
+            admin: adminCount
+        },
+        revenueHistory: formattedMonthlyRevenue
     });
 });
 

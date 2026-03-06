@@ -9,14 +9,32 @@ export const ProtectedRoute = ({ allowedRoles }) => {
 
     if (!isAuthenticated) return <Navigate to="/login" replace />;
 
+    // Handle Pending Teachers
+    if (user?.role === 'TEACHER' && user?.status === 'pending') {
+        return <Navigate to="/teacher/pending" replace />;
+    }
+
     if (allowedRoles && !allowedRoles.includes(user?.role)) {
-        return <Navigate to="/" replace />;
+        if (user?.role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
+        if (user?.role === 'TEACHER') return <Navigate to="/teacher/dashboard" replace />;
+        return <Navigate to="/dashboard" replace />;
     }
 
     return <Outlet />;
 };
 
 export const PublicRoute = () => {
-    const { isAuthenticated } = useSelector((state) => state.auth);
-    return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
+
+    if (isAuthenticated) {
+        if (user?.role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
+        if (user?.role === 'TEACHER') {
+            return user?.status === 'pending'
+                ? <Navigate to="/teacher/pending" replace />
+                : <Navigate to="/teacher/dashboard" replace />;
+        }
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return <Outlet />;
 };

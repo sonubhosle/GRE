@@ -121,4 +121,21 @@ const downloadCertificate = catchAsync(async (req, res) => {
     res.send(pdfBuffer);
 });
 
-module.exports = { getProfile, updateProfile, getWishlist, toggleWishlist, getEnrolledCourses, updateProgress, downloadCertificate };
+const cancelEnrollment = catchAsync(async (req, res) => {
+    const { courseId } = req.params;
+    const user = await User.findById(req.user._id);
+
+    if (!user.enrolledCourses.includes(courseId)) {
+        return sendError(res, 400, 'You are not enrolled in this course.');
+    }
+
+    user.enrolledCourses.pull(courseId);
+    await user.save();
+
+    // Optionally cleanup progress or keep it? Usually cleanup if "cancel"
+    await Progress.findOneAndDelete({ user: req.user._id, course: courseId });
+
+    return sendSuccess(res, 200, 'Enrollment cancelled successfully.');
+});
+
+module.exports = { getProfile, updateProfile, getWishlist, toggleWishlist, getEnrolledCourses, updateProgress, downloadCertificate, cancelEnrollment };

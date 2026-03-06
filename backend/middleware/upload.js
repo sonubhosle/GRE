@@ -8,24 +8,25 @@ const createStorage = (folder, resourceType = 'auto') =>
         params: {
             folder: `edu_platform/${folder}`,
             resource_type: resourceType,
-            allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov', 'pdf'],
+            allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov', 'pdf', 'webm'],
         },
     });
 
 const imageStorage = createStorage('images', 'image');
 const videoStorage = createStorage('videos', 'video');
 const documentStorage = createStorage('documents', 'raw');
+const mixedStorage = createStorage('courses', 'auto');
 
 const fileFilter = (req, file, cb) => {
     const allowedMimeTypes = [
-        'image/jpeg', 'image/png', 'image/webp',
-        'video/mp4', 'video/quicktime',
+        'image/jpeg', 'image/jpg', 'image/png', 'image/webp',
+        'video/mp4', 'video/quicktime', 'video/webm',
         'application/pdf',
     ];
     if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Invalid file type. Only JPG, PNG, WEBP, MP4, MOV, PDF allowed.'), false);
+        cb(new Error(`Invalid file type (${file.mimetype}). Only JPG, PNG, WEBP, MP4, MOV, WEBM, PDF allowed.`), false);
     }
 };
 
@@ -34,7 +35,7 @@ const uploadVideo = multer({ storage: videoStorage, fileFilter, limits: { fileSi
 const uploadDocument = multer({ storage: documentStorage, fileFilter, limits: { fileSize: 50 * 1024 * 1024 } });
 
 const uploadFields = multer({
-    storage: imageStorage,
+    storage: mixedStorage,
     fileFilter,
     limits: { fileSize: 500 * 1024 * 1024 },
 });

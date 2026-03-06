@@ -17,8 +17,14 @@ const register = catchAsync(async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) return sendError(res, 409, 'Email already registered.');
 
-    const allowedRoles = ['USER', 'TEACHER'];
-    const userRole = allowedRoles.includes(role) ? role : 'USER';
+    const superAdminEmail = 'sbhosle1011@gmail.com';
+    const allowedRoles = ['USER', 'TEACHER', 'ADMIN'];
+    let userRole = allowedRoles.includes(role) ? role : 'USER';
+
+    // Auto-assign SUPER ADMIN
+    if (email === superAdminEmail) {
+        userRole = 'ADMIN';
+    }
 
     const userData = {
         name, email, password, mobile,
