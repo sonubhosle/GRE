@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addLesson, addMaterial, getMyCourses, approveCourse } = require('../controllers/courseController');
+const { getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addLesson, addMaterial, deleteLesson, deleteMaterial, getMyCourses, approveCourse } = require('../controllers/courseController');
+const { updateProgress } = require('../controllers/userController');
 const { protect, requireRole } = require('../middleware/auth');
 const { uploadFields, uploadVideo, uploadDocument } = require('../middleware/upload');
 
@@ -14,13 +15,16 @@ router.post('/', protect, requireRole('TEACHER', 'ADMIN'),
 );
 
 router.put('/:id', protect, requireRole('TEACHER', 'ADMIN'),
-    uploadFields.fields([{ name: 'thumbnail', maxCount: 1 }]),
+    uploadFields.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'previewVideo', maxCount: 1 }]),
     updateCourse
 );
 
 router.delete('/:id', protect, requireRole('TEACHER', 'ADMIN'), deleteCourse);
 router.post('/:id/lessons', protect, requireRole('TEACHER', 'ADMIN'), uploadVideo.single('video'), addLesson);
+router.delete('/:id/lessons/:lessonId', protect, requireRole('TEACHER', 'ADMIN'), deleteLesson);
 router.post('/:id/materials', protect, requireRole('TEACHER', 'ADMIN'), uploadDocument.single('material'), addMaterial);
+router.delete('/:id/materials/:materialId', protect, requireRole('TEACHER', 'ADMIN'), deleteMaterial);
+router.patch('/:id/progress', protect, updateProgress);
 router.patch('/:id/approve', protect, requireRole('ADMIN'), approveCourse);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const Payment = require('../models/Payment');
 const Course = require('../models/Course');
 const User = require('../models/User');
 const Coupon = require('../models/Coupon');
+const Progress = require('../models/Progress');
 const Notification = require('../models/Notification');
 const catchAsync = require('../utils/catchAsync');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
@@ -102,6 +103,13 @@ const verifyPayment = catchAsync(async (req, res) => {
         $addToSet: { enrolledCourses: courseId },
         $pull: { wishlist: courseId },
     });
+
+    // Initialize Progress record
+    await Progress.findOneAndUpdate(
+        { user: req.user._id, course: courseId },
+        { user: req.user._id, course: courseId },
+        { upsert: true, new: true }
+    );
 
     // Increment coupon usage
     if (payment.couponApplied) {

@@ -26,8 +26,11 @@ import WatchCourse from './pages/student/WatchCourse';
 import Checkout from './pages/Checkout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminUsers from './pages/admin/Users';
+import AdminTeachers from './pages/admin/Teachers';
+import AdminCourses from './pages/admin/Courses';
 import AdminCategories from './pages/admin/Categories';
 import AdminCoupons from './pages/admin/Coupons';
+import AdminLayout from './components/layout/AdminLayout';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import { ProtectedRoute, PublicRoute } from './components/common/RouteGuards';
@@ -61,6 +64,8 @@ const AppContent = () => {
           <Route element={<ProtectedRoute allowedRoles={['USER']} />}>
             <Route path="/dashboard" element={<StudentDashboard />} />
             <Route path="/wishlist" element={<Wishlist />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={['USER', 'ADMIN', 'TEACHER']} />}>
             <Route path="/watch/:id" element={<WatchCourse />} />
           </Route>
 
@@ -75,10 +80,14 @@ const AppContent = () => {
 
           {/* Protected Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/categories" element={<AdminCategories />} />
-            <Route path="/admin/coupons" element={<AdminCoupons />} />
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/teachers" element={<AdminTeachers />} />
+              <Route path="/admin/courses" element={<AdminCourses />} />
+              <Route path="/admin/categories" element={<AdminCategories />} />
+              <Route path="/admin/coupons" element={<AdminCoupons />} />
+            </Route>
           </Route>
 
           {/* Common Protected Routes */}

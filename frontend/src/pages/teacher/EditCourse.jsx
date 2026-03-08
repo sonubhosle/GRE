@@ -2,15 +2,31 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { Spinner } from '../../components/common/Spinner';
-import { Video, FileUp, Trash2, Plus, Check, Loader2, ArrowLeft } from 'lucide-react';
+import { Layout, Video, FileUp, Trash2, Plus, Check, Loader2, ArrowLeft, Image as ImageIcon, Save, Info } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const EditCourse = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [course, setCourse] = useState(null);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
+    const [updatingCourse, setUpdatingCourse] = useState(false);
+
+    // Course form state
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        category: '',
+        price: '',
+        discount: '',
+        level: 'Beginner',
+        language: 'English',
+        tags: '',
+        thumbnail: null,
+        previewVideo: null
+    });
 
     // Form states for adding content
     const [lessonData, setLessonData] = useState({ title: '', video: null });
@@ -18,16 +34,63 @@ const EditCourse = () => {
 
     useEffect(() => {
         fetchCourse();
+        fetchCategories();
     }, [id]);
+
+    const fetchCategories = async () => {
+        try {
+            const res = await api.get('/categories');
+            setCategories(res.data.data.categories);
+        } catch (e) {
+            console.error('Failed to fetch categories');
+        }
+    };
 
     const fetchCourse = async () => {
         try {
             const res = await api.get(`/courses/${id}`);
-            setCourse(res.data.data.course);
+            const c = res.data.data.course;
+            setCourse(c);
+            setFormData({
+                title: c.title || '',
+                description: c.description || '',
+                category: c.category?._id || c.category || '',
+                price: c.price || '',
+                discount: c.discount || '0',
+                level: c.level || 'Beginner',
+                language: c.language || 'English',
+                tags: Array.isArray(c.tags) ? c.tags.join(', ') : c.tags || '',
+                thumbnail: null,
+                previewVideo: null
+            });
         } catch (e) {
             toast.error('Failed to fetch course details');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleUpdateCourse = async (e) => {
+        e.preventDefault();
+        setUpdatingCourse(true);
+
+        const data = new FormData();
+        Object.keys(formData).forEach(key => {
+            if (formData[key] !== null) {
+                data.append(key, formData[key]);
+            }
+        });
+
+        try {
+            await api.put(`/courses/${id}`, data, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            toast.success('Course details updated successfully!');
+            fetchCourse();
+        } catch (e) {
+            toast.error(e.response?.data?.message || 'Update failed');
+        } finally {
+            setUpdatingCourse(false);
         }
     };
 
@@ -41,7 +104,7 @@ const EditCourse = () => {
         data.append('video', lessonData.video);
 
         try {
-            await api.post(`/courses/${id}/videos`, data, {
+            await api.post(`/courses/${id}/lessons`, data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             toast.success('Lesson added successfully!');
@@ -80,8 +143,17 @@ const EditCourse = () => {
     const handleDeleteVideo = async (videoId) => {
         if (!window.confirm('Delete this lesson?')) return;
         try {
-            await api.delete(`/courses/${id}/videos/${videoId}`);
+            await api.delete(`/courses/${id}/lessons/${videoId}`);
             toast.success('Lesson deleted');
+            fetchCourse();
+        } catch (e) { toast.error('Delete failed'); }
+    };
+
+    const handleDeleteMaterial = async (materialId) => {
+        if (!window.confirm('Delete this material?')) return;
+        try {
+            await api.delete(`/courses/${id}/materials/${materialId}`);
+            toast.success('Material deleted');
             fetchCourse();
         } catch (e) { toast.error('Delete failed'); }
     };
@@ -98,12 +170,160 @@ const EditCourse = () => {
                     <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to courses
                 </button>
 
-                <div className="flex flex-col lg:row gap-12">
-                    {/* Course Info & Curriculum Left Column */}
+                <div className="flex flex-col lg:flex-row gap-12">
+                    {/* Course Info & Details Left Column */}
                     <div className="flex-1 space-y-12">
                         <div className="animate-fade-in-up">
-                            <h1 className="text-4xl font-bold text-slate-900 mb-3 leading-tight">Edit <span className="text-indigo-600">curriculum</span></h1>
-                            <p className="text-slate-500 font-medium text-lg">Managing content for: <span className="text-slate-900 font-bold">{course.title}</span></p>
+                            <h1 className="text-4xl font-bold text-slate-900 mb-3 leading-tight">Edit <span className="text-indigo-600">Course</span></h1>
+                            <p className="text-slate-500 font-medium text-lg">Managing details and curriculum for: <span className="text-slate-900 font-bold">{course.title}</span></p>
+                        </div>
+
+                        {/* Course Details Form */}
+                        <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden animate-fade-in-up delay-75">
+                            <div className="p-8 border-b border-slate-50 bg-slate-50/30 flex items-center justify-between">
+                                <h2 className="text-xl font-bold flex items-center gap-3 text-slate-900"><Info className="text-indigo-600" /> Basic Information</h2>
+                            </div>
+                            <form onSubmit={handleUpdateCourse} className="p-8 space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="md:col-span-2">
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Course Title</label>
+                                        <input
+                                            type="text"
+                                            value={formData.title}
+                                            onChange={e => setFormData({ ...formData, title: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                            placeholder="Enter course title"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="md:col-span-2">
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Description</label>
+                                        <textarea
+                                            value={formData.description}
+                                            onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all min-h-[150px]"
+                                            placeholder="Enter detailed description"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Category</label>
+                                        <select
+                                            value={formData.category}
+                                            onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all appearance-none"
+                                            required
+                                        >
+                                            <option value="">Select Category</option>
+                                            {categories.map(cat => (
+                                                <option key={cat._id} value={cat._id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Level</label>
+                                        <select
+                                            value={formData.level}
+                                            onChange={e => setFormData({ ...formData, level: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                        >
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Price (₹)</label>
+                                        <input
+                                            type="number"
+                                            value={formData.price}
+                                            onChange={e => setFormData({ ...formData, price: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                            placeholder="Price"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Discount (%)</label>
+                                        <input
+                                            type="number"
+                                            value={formData.discount}
+                                            onChange={e => setFormData({ ...formData, discount: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                            placeholder="Discount"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Language</label>
+                                        <input
+                                            type="text"
+                                            value={formData.language}
+                                            onChange={e => setFormData({ ...formData, language: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                            placeholder="e.g. English"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Tags (comma separated)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.tags}
+                                            onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                                            className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-slate-900 font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all"
+                                            placeholder="e.g. React, JS, Web Dev"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Update Thumbnail</label>
+                                        <div className="relative group/file">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={e => setFormData({ ...formData, thumbnail: e.target.files[0] })}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                            />
+                                            <div className="bg-slate-50 border border-slate-100 px-5 py-4 rounded-2xl text-slate-400 font-medium group-hover/file:bg-white group-hover/file:border-indigo-500 transition-all flex items-center justify-between truncate">
+                                                <span className="truncate">{formData.thumbnail ? formData.thumbnail.name : 'Select image...'}</span>
+                                                <ImageIcon size={18} className="flex-shrink-0" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[11px] font-bold text-slate-400 block mb-3 uppercase tracking-wider">Update Preview Video</label>
+                                        <div className="relative group/file">
+                                            <input
+                                                type="file"
+                                                accept="video/*"
+                                                onChange={e => setFormData({ ...formData, previewVideo: e.target.files[0] })}
+                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                            />
+                                            <div className="bg-slate-50 border border-slate-100 px-5 py-4 rounded-2xl text-slate-400 font-medium group-hover/file:bg-white group-hover/file:border-indigo-500 transition-all flex items-center justify-between truncate">
+                                                <span className="truncate">{formData.previewVideo ? formData.previewVideo.name : 'Select video...'}</span>
+                                                <Video size={18} className="flex-shrink-0" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-end pt-4">
+                                    <button
+                                        type="submit"
+                                        disabled={updatingCourse}
+                                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-14 px-10 rounded-2xl shadow-xl shadow-indigo-200 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 disabled:scale-100"
+                                    >
+                                        {updatingCourse ? <Loader2 className="animate-spin" size={20} /> : <><Save size={20} /> Update Course Details</>}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
 
                         {/* Lessons List */}
@@ -149,15 +369,26 @@ const EditCourse = () => {
                             <div className="divide-y divide-slate-50">
                                 {course.studyMaterials?.map((mat) => (
                                     <div key={mat._id} className="p-6 flex items-center justify-between hover:bg-slate-50/50 transition-all group">
-                                        <p className="font-bold text-slate-900 group-hover:text-purple-600 transition-colors">{mat.title}</p>
-                                        <a
-                                            href={mat.url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="px-4 py-2 bg-purple-50 text-purple-600 rounded-xl font-bold text-[10px] hover:bg-purple-600 hover:text-white transition-all shadow-sm"
-                                        >
-                                            View file
-                                        </a>
+                                        <div className="flex items-center gap-4">
+                                            <p className="font-bold text-slate-900 group-hover:text-purple-600 transition-colors">{mat.title}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <a
+                                                href={mat.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="px-4 py-2 bg-purple-50 text-purple-600 rounded-xl font-bold text-[10px] hover:bg-purple-600 hover:text-white transition-all shadow-sm"
+                                            >
+                                                View file
+                                            </a>
+                                            <button
+                                                onClick={() => handleDeleteMaterial(mat._id)}
+                                                className="w-10 h-10 rounded-xl bg-white text-rose-500 border border-slate-100 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all flex items-center justify-center shadow-sm active:scale-95"
+                                                title="Delete material"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                                 {(!course.studyMaterials || course.studyMaterials.length === 0) && (

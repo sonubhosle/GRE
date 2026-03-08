@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import { Spinner } from '../../components/common/Spinner';
-import { BookOpen, Award, Clock, Play, XCircle, Loader2 } from 'lucide-react';
+import { BookOpen, Award, Clock, Play, XCircle, Loader2, ShieldCheck, PlayCircle } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const StudentDashboard = () => {
@@ -101,61 +101,105 @@ const StudentDashboard = () => {
                 </div>
 
                 {enrolledCourses.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 animate-fade-in-up delay-300">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 animate-fade-in-up delay-300">
                         {enrolledCourses.map((course, i) => (
-                            <div key={course._id} className="group bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl overflow-hidden transition-all duration-500 flex flex-col" style={{ animationDelay: `${i * 0.1}s` }}>
-                                <div className="relative aspect-video overflow-hidden">
-                                    <img src={course.thumbnail?.url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    <div className="absolute inset-x-6 bottom-6 group-hover:translate-y-0 translate-y-4 transition-transform duration-500">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-[10px] font-bold text-white/90">Course progress</span>
-                                            <span className="text-xs font-bold text-white">{course.progress?.progressPercent || 0}%</span>
+                            <div key={course._id} className="group bg-white rounded-[3.5rem] border border-slate-100 shadow-sm hover:shadow-2xl overflow-hidden transition-all duration-700 flex flex-col hover:-translate-y-4" style={{ animationDelay: `${i * 0.1}s` }}>
+                                {/* Thumbnail Section - Decluttered */}
+                                <div className="relative aspect-[16/9] overflow-hidden m-5 rounded-[2.8rem] shadow-inner bg-slate-100">
+                                    <img src={course.thumbnail?.url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={course.title} />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-1000"></div>
+
+                                    {/* Progress HUD - Prominent */}
+                                    <div className="absolute inset-x-8 bottom-8 group-hover:translate-y-0 translate-y-2 transition-transform duration-700 z-10">
+                                        <div className="flex justify-between items-end mb-3">
+                                            <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Course Mastery</span>
+                                            <span className="text-2xl font-black text-white tabular-nums drop-shadow-lg">{course.progress?.progressPercent || 0}%</span>
                                         </div>
-                                        <div className="h-2 w-full bg-white/20 backdrop-blur-md rounded-full overflow-hidden border border-white/10">
+                                        <div className="h-3 w-full bg-white/20 backdrop-blur-md rounded-full overflow-hidden border border-white/10 p-0.5">
                                             <div
-                                                className="h-full bg-gradient-to-r from-indigo-400 to-purple-400 transition-all duration-1000 shadow-[0_0_10px_rgba(129,140,248,0.5)]"
+                                                className="h-full bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(129,140,248,0.6)]"
                                                 style={{ width: `${course.progress?.progressPercent || 0}%` }}
                                             ></div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="p-8 flex-1 flex flex-col">
-                                    <Link to={`/watch/${course._id}`} className="font-bold text-xl text-slate-900 mb-4 hover:text-indigo-600 transition-colors line-clamp-2 leading-snug">
-                                        {course.title}
-                                    </Link>
-                                    <div className="flex items-center gap-3 mb-8">
-                                        <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-slate-100 shadow-sm">
-                                            <img src={course.teacher?.photo?.url || 'https://via.placeholder.com/32'} className="w-full h-full object-cover" />
+                                <div className="px-12 pb-12 pt-6 flex-1 flex flex-col">
+                                    {/* Body Badges Matrix */}
+                                    <div className="flex flex-wrap items-center gap-3 mb-8">
+                                        <span className={`px-5 py-2 rounded-2xl text-[10px] font-black border shadow-sm uppercase tracking-[0.2em] ${course.level === 'Beginner' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                                            course.level === 'Intermediate' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                                                'bg-rose-50 text-rose-600 border-rose-100'
+                                            }`}>
+                                            {course.level}
+                                        </span>
+                                        <span className="bg-indigo-50 text-indigo-600 px-5 py-2 rounded-2xl text-[10px] font-black border border-indigo-100 shadow-sm uppercase tracking-[0.2em]">
+                                            {course.category?.name || 'Knowledge'}
+                                        </span>
+                                        <div className="flex-1"></div>
+                                        <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 rounded-2xl shadow-xl">
+                                            <ShieldCheck size={14} className="text-emerald-400" />
+                                            <span className="text-[9px] font-black text-white uppercase tracking-widest">ENROLLED</span>
                                         </div>
-                                        <p className="text-sm text-slate-500 font-medium">{course.teacher?.name}</p>
                                     </div>
 
-                                    <div className="mt-auto flex gap-3">
-                                        <Link to={`/watch/${course._id}`} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 active:scale-95 group/btn">
-                                            <Play size={18} className="fill-current group-hover:scale-110 transition-transform" />
-                                            {course.progress?.progressPercent > 0 ? 'Resume' : 'Start learning'}
-                                        </Link>
-                                        <button
-                                            onClick={() => handleCancelEnrollment(course._id)}
-                                            className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-400 hover:bg-rose-50 text-rose-500 border border-slate-100 hover:border-rose-100 transition-all flex items-center justify-center shadow-sm active:scale-95 group/cancel"
-                                            title="Cancel enrollment"
-                                        >
-                                            <XCircle size={22} className="group-hover/cancel:scale-110 transition-transform" />
-                                        </button>
-                                        {course.progress?.completed && (
-                                            <button
-                                                onClick={async () => {
-                                                    window.open(`/api/users/certificate/${course._id}`, '_blank');
-                                                }}
-                                                className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white transition-all flex items-center justify-center border border-amber-100 shadow-sm active:scale-95"
-                                                title="Download certificate"
-                                            >
-                                                <Award size={24} />
-                                            </button>
-                                        )}
+                                    <div className="flex items-center gap-6 mb-8">
+                                        <div className="flex items-center gap-2.5 text-xs font-black text-slate-400 uppercase tracking-[0.3em] bg-slate-50 px-4 py-2 rounded-xl">
+                                            <Play size={12} className="text-indigo-600 fill-current" /> {course.courseVideos?.length || 0} Modules
+                                        </div>
+                                        <div className="flex items-center gap-2.5 text-xs font-black text-slate-400 uppercase tracking-[0.3em] bg-slate-50 px-4 py-2 rounded-xl">
+                                            <Clock size={12} className="text-slate-400" /> {course.duration}H
+                                        </div>
                                     </div>
+
+                                    <h3 className="font-black text-3xl mb-12 line-clamp-2 text-slate-900 group-hover:text-indigo-600 transition-all tracking-tight leading-[1.1] min-h-[4.2rem]">
+                                        {course.title}
+                                    </h3>
+
+                                    {/* Action & Mentor Integration */}
+                                    <div className="mt-auto pt-10 border-t-2 border-slate-50 flex items-center justify-between gap-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-14 h-14 rounded-2xl overflow-hidden border-4 border-white bg-slate-50 group-hover:border-indigo-600 transition-all shadow-xl ring-8 ring-slate-50">
+                                                <img
+                                                    src={course.teacher?.photo?.url || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.teacher?.name || 'T')}&background=818cf8&color=fff`}
+                                                    alt={course.teacher?.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Mentor</span>
+                                                <p className="text-base text-slate-900 font-black tracking-tight truncate max-w-[140px] uppercase">{course.teacher?.name}</p>
+                                            </div>
+                                        </div>
+
+                                        <Link
+                                            to={`/watch/${course._id}`}
+                                            className="bg-indigo-600 hover:bg-slate-900 text-white font-black py-5 px-10 rounded-[2rem] transition-all shadow-2xl shadow-indigo-600/20 active:scale-95 flex items-center gap-3 group/btn"
+                                        >
+                                            <span className="uppercase tracking-[0.2em] text-[11px]">Continue</span>
+                                            <PlayCircle size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    {course.progress?.completed && (
+                                        <button
+                                            onClick={async () => {
+                                                window.open(`/api/users/certificate/${course._id}`, '_blank');
+                                            }}
+                                            className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 hover:bg-green-600 hover:text-white transition-all flex items-center justify-center border border-amber-100 shadow-sm active:scale-95 hover:border-green-500"
+                                            title="Download certificate"
+                                        >
+                                            <Award size={24} />
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => handleCancelEnrollment(course._id)}
+                                        className="w-14 h-14 rounded-2xl bg-slate-50 text-slate-400 hover:bg-rose-50 text-rose-500 border border-slate-100 hover:border-rose-100 transition-all flex items-center justify-center shadow-sm active:scale-95 group/cancel"
+                                        title="Cancel enrollment"
+                                    >
+                                        <XCircle size={22} className="group-hover/cancel:scale-110 transition-transform" />
+                                    </button>
                                 </div>
                             </div>
                         ))}

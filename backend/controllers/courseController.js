@@ -92,13 +92,31 @@ const updateCourse = catchAsync(async (req, res) => {
     const isOwner = course.teacher.toString() === req.user._id.toString();
     if (req.user.role !== 'ADMIN' && !isOwner) return sendError(res, 403, 'Not authorized to update this course.');
 
-    if (req.files?.thumbnail) {
-        if (course.thumbnail?.public_id) await cloudinary.uploader.destroy(course.thumbnail.public_id);
-        req.body.thumbnail = { url: req.files.thumbnail[0].path, public_id: req.files.thumbnail[0].filename };
+    // Handle File Uploads
+    if (req.files) {
+        if (req.files.thumbnail) {
+            if (course.thumbnail?.public_id) await cloudinary.uploader.destroy(course.thumbnail.public_id);
+            req.body.thumbnail = {
+                url: req.files.thumbnail[0].path,
+                public_id: req.files.thumbnail[0].filename,
+            };
+        }
+        if (req.files.previewVideo) {
+            if (course.previewVideo?.public_id) await cloudinary.uploader.destroy(course.previewVideo.public_id, { resource_type: 'video' });
+            req.body.previewVideo = {
+                url: req.files.previewVideo[0].path,
+                public_id: req.files.previewVideo[0].filename,
+            };
+        }
+    }
+
+    // Handle Tags (if string)
+    if (req.body.tags && typeof req.body.tags === 'string') {
+        req.body.tags = req.body.tags.split(',').map((t) => t.trim());
     }
 
     course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    return sendSuccess(res, 200, 'Course updated.', { course });
+    return sendSuccess(res, 200, 'Course updated successfully.', { course });
 });
 
 // ─── Delete Course ─────────────────────────────────────────────────────────
@@ -123,16 +141,25 @@ const addLesson = catchAsync(async (req, res) => {
 
     if (!req.file) return sendError(res, 400, 'No video file uploaded.');
 
+    // Cloudinary returns duration (in seconds) on the upload result object
+    const videoDuration = req.file.duration || 0;
+
     course.courseVideos.push({
         title: req.body.title || 'Lesson',
         url: req.file.path,
         public_id: req.file.filename,
+        duration: videoDuration,
         order: course.courseVideos.length + 1,
     });
+
+    // Auto-recalculate total course duration (in hours, rounded to 1 decimal)
+    const totalSeconds = course.courseVideos.reduce((sum, v) => sum + (v.duration || 0), 0);
+    course.duration = Math.round((totalSeconds / 3600) * 10) / 10;
 
     await course.save();
     return sendSuccess(res, 200, 'Lesson added.', { course });
 });
+
 
 // ─── Add Study Material ────────────────────────────────────────────────────
 const addMaterial = catchAsync(async (req, res) => {
@@ -150,6 +177,52 @@ const addMaterial = catchAsync(async (req, res) => {
 
     await course.save();
     return sendSuccess(res, 200, 'Material added.', { course });
+});
+
+// ─── Delete Video Lesson ───────────────────────────────────────────────────
+const deleteLesson = catchAsync(async (req, res) => {
+    const { id, lessonId } = req.params;
+    const course = await Course.findById(id);
+    if (!course) return sendError(res, 404, 'Course not found.');
+
+    const isOwner = course.teacher.toString() === req.user._id.toString();
+    if (req.user.role !== 'ADMIN' && !isOwner) return sendError(res, 403, 'Not authorized.');
+
+    const lesson = course.courseVideos.id(lessonId);
+    if (!lesson) return sendError(res, 404, 'Lesson not found.');
+
+    // Delete from Cloudinary
+    if (lesson.public_id) {
+        await cloudinary.uploader.destroy(lesson.public_id, { resource_type: 'video' });
+    }
+
+    course.courseVideos.pull(lessonId);
+    await course.save();
+
+    return sendSuccess(res, 200, 'Lesson deleted.', { course });
+});
+
+// ─── Delete Study Material ─────────────────────────────────────────────────
+const deleteMaterial = catchAsync(async (req, res) => {
+    const { id, materialId } = req.params;
+    const course = await Course.findById(id);
+    if (!course) return sendError(res, 404, 'Course not found.');
+
+    const isOwner = course.teacher.toString() === req.user._id.toString();
+    if (req.user.role !== 'ADMIN' && !isOwner) return sendError(res, 403, 'Not authorized.');
+
+    const material = course.studyMaterials.id(materialId);
+    if (!material) return sendError(res, 404, 'Material not found.');
+
+    // Delete from Cloudinary
+    if (material.public_id) {
+        await cloudinary.uploader.destroy(material.public_id);
+    }
+
+    course.studyMaterials.pull(materialId);
+    await course.save();
+
+    return sendSuccess(res, 200, 'Material deleted.', { course });
 });
 
 // ─── Get My Courses (teacher) ───────────────────────────────────────────────
@@ -171,4 +244,4 @@ const approveCourse = catchAsync(async (req, res) => {
     return sendSuccess(res, 200, 'Course approved and published.', { course });
 });
 
-module.exports = { getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addLesson, addMaterial, getMyCourses, approveCourse };
+module.exports = { getAllCourses, getCourse, createCourse, updateCourse, deleteCourse, addLesson, addMaterial, deleteLesson, deleteMaterial, getMyCourses, approveCourse };

@@ -61,8 +61,11 @@ const toggleWishlist = catchAsync(async (req, res) => {
 const getEnrolledCourses = catchAsync(async (req, res) => {
     const user = await User.findById(req.user._id).populate({
         path: 'enrolledCourses',
-        populate: { path: 'teacher', select: 'name' },
-        select: 'title thumbnail duration ratingsAverage teacher',
+        populate: [
+            { path: 'teacher', select: 'name photo' },
+            { path: 'category', select: 'name' }
+        ],
+        select: 'title thumbnail duration ratingsAverage teacher level category courseVideos',
     });
 
     const progresses = await Progress.find({ user: req.user._id });
@@ -79,7 +82,12 @@ const getEnrolledCourses = catchAsync(async (req, res) => {
 
 // ─── Update Lesson Progress ────────────────────────────────────────────────
 const updateProgress = catchAsync(async (req, res) => {
-    const { courseId, lessonId } = req.body;
+    const { courseId: bodyCourseId, lessonId, videoId } = req.body;
+    const courseId = req.params.id || bodyCourseId;
+    const idToMark = lessonId || videoId;
+
+    if (!courseId) return sendError(res, 400, 'Course ID is required.');
+    if (!idToMark) return sendError(res, 400, 'Lesson/Video ID is required.');
 
     const course = await Course.findById(courseId);
     if (!course) return sendError(res, 404, 'Course not found.');
@@ -89,16 +97,55 @@ const updateProgress = catchAsync(async (req, res) => {
         progress = await Progress.create({ user: req.user._id, course: courseId });
     }
 
-    if (!progress.completedLessons.includes(lessonId)) {
-        progress.completedLessons.push(lessonId);
+    if (!progress.completedLessons.includes(idToMark)) {
+        progress.completedLessons.push(idToMark);
     }
 
     const totalLessons = course.courseVideos.length;
     progress.progressPercent = totalLessons > 0 ? Math.round((progress.completedLessons.length / totalLessons) * 100) : 0;
     progress.completed = progress.progressPercent >= 100;
+
     await progress.save();
 
-    return sendSuccess(res, 200, 'Progress updated.', { progress });
+    return sendSuccess(res, 200, 'Progress updated.', {
+        progress: {
+            ...progress.toObject(),
+            completedVideos: progress.completedLessons // Frontend expectation
+        }
+    });
+});
+
+// ─── Get Progress ──────────────────────────────────────────────────────────
+const getProgress = catchAsync(async (req, res) => {
+    const { courseId } = req.params;
+
+    let progress = await Progress.findOne({ user: req.user._id, course: courseId });
+    if (!progress) {
+        // Return blank progress if user is enrolled or is ADMIN/Owner but no progress record yet
+        const user = await User.findById(req.user._id);
+        const course = await Course.findById(courseId);
+
+        const isEnrolled = user.enrolledCourses.includes(courseId);
+        const isAdmin = user.role === 'ADMIN';
+        const isOwner = course && course.teacher.toString() === user._id.toString();
+
+        if (!isEnrolled && !isAdmin && !isOwner) {
+            return sendError(res, 403, 'You are not enrolled in this course.');
+        }
+
+        progress = {
+            progressPercent: 0,
+            completedLessons: [],
+            completed: false
+        };
+    }
+
+    return sendSuccess(res, 200, 'Progress fetched.', {
+        progress: {
+            ...(progress.toObject ? progress.toObject() : progress),
+            completedVideos: progress.completedLessons || []
+        }
+    });
 });
 
 // ─── Download Certificate (PDF) ────────────────────────────────────────────
@@ -138,4 +185,4 @@ const cancelEnrollment = catchAsync(async (req, res) => {
     return sendSuccess(res, 200, 'Enrollment cancelled successfully.');
 });
 
-module.exports = { getProfile, updateProfile, getWishlist, toggleWishlist, getEnrolledCourses, updateProgress, downloadCertificate, cancelEnrollment };
+module.exports = { getProfile, updateProfile, getWishlist, toggleWishlist, getEnrolledCourses, updateProgress, getProgress, downloadCertificate, cancelEnrollment };
