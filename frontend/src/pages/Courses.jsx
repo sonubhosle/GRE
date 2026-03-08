@@ -64,14 +64,14 @@ const Courses = () => {
                     {/* Sidebar Filters */}
                     <aside className={`lg:w-80 flex-shrink-0 ${showFilters ? 'fixed inset-0 z-50 bg-white/98 backdrop-blur-2xl p-10 overflow-y-auto' : 'hidden lg:block'}`}>
                         <div className="flex items-center justify-between mb-12 lg:hidden">
-                            <h3 className="text-3xl font-black text-slate-900 tracking-tight">Filters</h3>
+                            <h3 className="text-3xl font-semibold text-slate-900 tracking-tight">Filters</h3>
                             <button onClick={() => setShowFilters(false)} className="w-14 h-14 rounded-[1.5rem] bg-slate-50 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-all active:scale-95"><X /></button>
                         </div>
 
                         <div className="sticky top-28 space-y-14">
                             {/* Search Container */}
                             <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                <h4 className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-indigo-600"></div> Search Catalog
                                 </h4>
                                 <div className="relative group">
@@ -88,7 +88,7 @@ const Courses = () => {
 
                             {/* Category Navigator */}
                             <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                <h4 className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-purple-600"></div> Categories
                                 </h4>
                                 <CustomDropdown
@@ -104,7 +104,7 @@ const Courses = () => {
 
                             {/* Difficulty Matrix */}
                             <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                <h4 className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-600"></div> Skill Level
                                 </h4>
                                 <div className="grid grid-cols-1 gap-3">
@@ -117,7 +117,7 @@ const Courses = () => {
                                                 : 'bg-slate-50/50 border-slate-100 hover:border-indigo-600/30 text-slate-500'
                                                 }`}
                                         >
-                                            <span className={`text-xs font-black uppercase tracking-widest ${filters.level === l ? 'text-white' : 'group-hover:text-indigo-600'}`}>
+                                            <span className={`text-xs font-semibold uppercase tracking-widest ${filters.level === l ? 'text-white' : 'group-hover:text-indigo-600'}`}>
                                                 {l}
                                             </span>
                                             {filters.level === l && <CheckCircle2 size={16} className="text-white" />}
@@ -128,12 +128,12 @@ const Courses = () => {
 
                             {/* Price Architecture */}
                             <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                                <h4 className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 rounded-full bg-rose-600"></div> Pricing
                                 </h4>
                                 <div className="flex items-center gap-2">
                                     <div className="relative flex-1">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-[9px] uppercase tracking-widest">Min</span>
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-[9px] uppercase tracking-widest">Min</span>
                                         <input
                                             type="number"
                                             className="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 pl-12 pr-4 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600/10 transition-all"
@@ -142,7 +142,7 @@ const Courses = () => {
                                         />
                                     </div>
                                     <div className="relative flex-1">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-black text-[9px] uppercase tracking-widest">Max</span>
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-[9px] uppercase tracking-widest">Max</span>
                                         <input
                                             type="number"
                                             className="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-4 pl-12 pr-4 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-600/10 transition-all"
@@ -157,7 +157,7 @@ const Courses = () => {
                             <div className="pt-4 space-y-4">
                                 <button
                                     onClick={applyFilters}
-                                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-5 rounded-[2rem] transition-all shadow-xl shadow-slate-900/10 active:scale-95 flex items-center justify-center gap-3 group relative overflow-hidden"
+                                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-5 rounded-[2rem] transition-all shadow-xl shadow-slate-900/10 active:scale-95 flex items-center justify-center gap-3 group relative overflow-hidden"
                                 >
                                     <div className="absolute inset-0 bg-indigo-600 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 opacity-20"></div>
                                     <Search size={18} />
@@ -165,7 +165,7 @@ const Courses = () => {
                                 </button>
                                 <button
                                     onClick={clearFilters}
-                                    className="w-full text-slate-400 hover:text-rose-500 font-black py-2 transition-all text-[10px] uppercase tracking-[0.3em]"
+                                    className="w-full text-slate-400 hover:text-rose-500 font-semibold py-2 transition-all text-[10px] uppercase tracking-[0.3em]"
                                 >
                                     Reset Discovery
                                 </button>
@@ -182,7 +182,7 @@ const Courses = () => {
                                         <div className="w-10 h-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-100">
                                             <GraduationCap size={20} />
                                         </div>
-                                        <span className="text-[11px] font-black uppercase tracking-widest text-indigo-600">Explore catalog</span>
+                                        <span className="text-[11px] font-semibold uppercase tracking-widest text-indigo-600">Explore catalog</span>
                                     </div>
                                     <h1 className="text-4xl  font-bold text-slate-900 tracking-tight leading-none">
                                         {searchParams.get('search') ? (
@@ -218,7 +218,7 @@ const Courses = () => {
                                         {[...Array(pagination.pages)].map((_, i) => (
                                             <button
                                                 key={i}
-                                                className={`w-12 h-12 rounded-2xl font-black text-sm transition-all duration-300 ${pagination.page === i + 1
+                                                className={`w-12 h-12 rounded-2xl font-semibold text-sm transition-all duration-300 ${pagination.page === i + 1
                                                     ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20 scale-110'
                                                     : 'bg-white text-slate-400 border border-slate-100 hover:border-indigo-600/30 hover:text-indigo-600 translate-y-0 hover:-translate-y-1'
                                                     }`}

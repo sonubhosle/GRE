@@ -22,6 +22,7 @@ const teacherRoutes = require('./routes/teacherRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const publicRoutes = require('./routes/publicRoutes');
 
 // Connect DB
 connectDB();
@@ -84,6 +85,7 @@ app.use('/api/teacher', teacherRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/public', publicRoutes);
 
 // ─── Health Check ──────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => res.json({ success: true, message: 'Server is running ✅' }));

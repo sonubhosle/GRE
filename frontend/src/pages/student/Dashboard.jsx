@@ -112,8 +112,8 @@ const StudentDashboard = () => {
                                     {/* Progress HUD - Prominent */}
                                     <div className="absolute inset-x-8 bottom-8 group-hover:translate-y-0 translate-y-2 transition-transform duration-700 z-10">
                                         <div className="flex justify-between items-end mb-3">
-                                            <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Course Mastery</span>
-                                            <span className="text-2xl font-black text-white tabular-nums drop-shadow-lg">{course.progress?.progressPercent || 0}%</span>
+                                            <span className="text-[10px] font-semibold text-white uppercase tracking-[0.3em]">Course Mastery</span>
+                                            <span className="text-2xl font-semibold text-white tabular-nums drop-shadow-lg">{course.progress?.progressPercent || 0}%</span>
                                         </div>
                                         <div className="h-3 w-full bg-white/20 backdrop-blur-md rounded-full overflow-hidden border border-white/10 p-0.5">
                                             <div
@@ -127,32 +127,32 @@ const StudentDashboard = () => {
                                 <div className="px-12 pb-12 pt-6 flex-1 flex flex-col">
                                     {/* Body Badges Matrix */}
                                     <div className="flex flex-wrap items-center gap-3 mb-8">
-                                        <span className={`px-5 py-2 rounded-2xl text-[10px] font-black border shadow-sm uppercase tracking-[0.2em] ${course.level === 'Beginner' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                                        <span className={`px-5 py-2 rounded-2xl text-[10px] font-semibold border shadow-sm uppercase tracking-[0.2em] ${course.level === 'Beginner' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                                             course.level === 'Intermediate' ? 'bg-amber-50 text-amber-600 border-amber-100' :
                                                 'bg-rose-50 text-rose-600 border-rose-100'
                                             }`}>
                                             {course.level}
                                         </span>
-                                        <span className="bg-indigo-50 text-indigo-600 px-5 py-2 rounded-2xl text-[10px] font-black border border-indigo-100 shadow-sm uppercase tracking-[0.2em]">
+                                        <span className="bg-indigo-50 text-indigo-600 px-5 py-2 rounded-2xl text-[10px] font-semibold border border-indigo-100 shadow-sm uppercase tracking-[0.2em]">
                                             {course.category?.name || 'Knowledge'}
                                         </span>
                                         <div className="flex-1"></div>
                                         <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 rounded-2xl shadow-xl">
                                             <ShieldCheck size={14} className="text-emerald-400" />
-                                            <span className="text-[9px] font-black text-white uppercase tracking-widest">ENROLLED</span>
+                                            <span className="text-[9px] font-semibold text-white uppercase tracking-widest">ENROLLED</span>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-6 mb-8">
-                                        <div className="flex items-center gap-2.5 text-xs font-black text-slate-400 uppercase tracking-[0.3em] bg-slate-50 px-4 py-2 rounded-xl">
+                                        <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-400 uppercase tracking-[0.3em] bg-slate-50 px-4 py-2 rounded-xl">
                                             <Play size={12} className="text-indigo-600 fill-current" /> {course.courseVideos?.length || 0} Modules
                                         </div>
-                                        <div className="flex items-center gap-2.5 text-xs font-black text-slate-400 uppercase tracking-[0.3em] bg-slate-50 px-4 py-2 rounded-xl">
+                                        <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-400 uppercase tracking-[0.3em] bg-slate-50 px-4 py-2 rounded-xl">
                                             <Clock size={12} className="text-slate-400" /> {course.duration}H
                                         </div>
                                     </div>
 
-                                    <h3 className="font-black text-3xl mb-12 line-clamp-2 text-slate-900 group-hover:text-indigo-600 transition-all tracking-tight leading-[1.1] min-h-[4.2rem]">
+                                    <h3 className="font-semibold text-3xl mb-12 line-clamp-2 text-slate-900 group-hover:text-indigo-600 transition-all tracking-tight leading-[1.1] min-h-[4.2rem]">
                                         {course.title}
                                     </h3>
 
@@ -167,14 +167,14 @@ const StudentDashboard = () => {
                                                 />
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Mentor</span>
-                                                <p className="text-base text-slate-900 font-black tracking-tight truncate max-w-[140px] uppercase">{course.teacher?.name}</p>
+                                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-[0.3em] mb-1">Mentor</span>
+                                                <p className="text-base text-slate-900 font-semibold tracking-tight truncate max-w-[140px] uppercase">{course.teacher?.name}</p>
                                             </div>
                                         </div>
 
                                         <Link
                                             to={`/watch/${course._id}`}
-                                            className="bg-indigo-600 hover:bg-slate-900 text-white font-black py-5 px-10 rounded-[2rem] transition-all shadow-2xl shadow-indigo-600/20 active:scale-95 flex items-center gap-3 group/btn"
+                                            className="bg-indigo-600 hover:bg-slate-900 text-white font-semibold py-5 px-10 rounded-[2rem] transition-all shadow-2xl shadow-indigo-600/20 active:scale-95 flex items-center gap-3 group/btn"
                                         >
                                             <span className="uppercase tracking-[0.2em] text-[11px]">Continue</span>
                                             <PlayCircle size={18} className="group-hover/btn:translate-x-1 transition-transform" />

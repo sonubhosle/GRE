@@ -20,4 +20,9 @@ const markAllAsRead = catchAsync(async (req, res) => {
     return sendSuccess(res, 200, 'All notifications marked as read.');
 });
 
-module.exports = { getNotifications, markAsRead, markAllAsRead };
+const deleteNotification = catchAsync(async (req, res) => {
+    await Notification.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+    return sendSuccess(res, 200, 'Notification deleted.');
+});
+
+module.exports = { getNotifications, markAsRead, markAllAsRead, deleteNotification };

@@ -39,4 +39,14 @@ const applyCoupon = catchAsync(async (req, res) => {
     });
 });
 
-module.exports = { createCoupon, getAllCoupons, updateCoupon, deleteCoupon, applyCoupon };
+const getActiveCoupons = catchAsync(async (req, res) => {
+    const coupons = await Coupon.find({
+        active: true,
+        expiryDate: { $gt: new Date() },
+        $expr: { $lt: ["$usedCount", "$maxUsage"] }
+    }).sort({ createdAt: -1 });
+
+    return sendSuccess(res, 200, 'Active coupons fetched.', { coupons });
+});
+
+module.exports = { createCoupon, getAllCoupons, updateCoupon, deleteCoupon, applyCoupon, getActiveCoupons };

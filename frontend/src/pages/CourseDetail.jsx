@@ -60,14 +60,14 @@ const ReviewCard = ({ review, currentUserId, onDelete }) => {
                         {review.user?.photo?.url ? (
                             <img src={review.user.photo.url} alt={review.user.name} className="w-full h-full object-cover" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-indigo-50 text-indigo-600 font-bold text-sm">
+                            <div className="w-full h-full flex items-center justify-center bg-indigo-50 text-indigo-600 font-semibold text-sm">
                                 {review.user?.name?.[0]?.toUpperCase() || 'U'}
                             </div>
                         )}
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-slate-900 leading-none mb-1">{review.user?.name || 'Student'}</p>
-                        <p className="text-[10px] font-bold text-slate-400">{dateStr}</p>
+                        <p className="text-sm font-semibold text-slate-900 leading-none mb-1">{review.user?.name || 'Student'}</p>
+                        <p className="text-[10px] font-semibold text-slate-400">{dateStr}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -85,7 +85,7 @@ const ReviewCard = ({ review, currentUserId, onDelete }) => {
             <p className="text-sm text-slate-600 font-medium leading-relaxed">{review.comment}</p>
             {review.teacherReply?.message && (
                 <div className="mt-4 ml-4 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
-                    <p className="text-[10px] font-bold text-indigo-600 mb-1 uppercase tracking-wider">Instructor Reply</p>
+                    <p className="text-[10px] font-semibold text-indigo-600 mb-1 uppercase tracking-wider">Instructor Reply</p>
                     <p className="text-sm text-slate-700 font-medium leading-relaxed">{review.teacherReply.message}</p>
                 </div>
             )}
@@ -140,7 +140,7 @@ const CourseDetail = () => {
                 <div className="absolute inset-0 border-4 border-indigo-100 rounded-full" />
                 <div className="absolute inset-0 border-4 border-t-indigo-600 rounded-full animate-spin" />
             </div>
-            <span className="text-[11px] font-bold text-slate-400 animate-pulse">Loading course details...</span>
+            <span className="text-[11px] font-semibold text-slate-400 animate-pulse">Loading course details...</span>
         </div>
     );
 
@@ -209,7 +209,7 @@ const CourseDetail = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14">
 
                     {/* Breadcrumb */}
-                    <nav className="flex items-center gap-2 mb-8 text-[11px] font-bold text-slate-400">
+                    <nav className="flex items-center gap-2 mb-8 text-[11px] font-semibold text-slate-400">
                         <Link to="/courses" className="hover:text-indigo-600 transition-colors">Catalog</Link>
                         <ChevronRight size={10} className="text-slate-300" />
                         <span className="text-indigo-600">{currentCourse.category?.name}</span>
@@ -237,7 +237,7 @@ const CourseDetail = () => {
                                         {/* Close preview */}
                                         <button
                                             onClick={() => setPreviewPlaying(false)}
-                                            className="absolute top-4 right-4 bg-black/50 backdrop-blur text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20 hover:bg-black/70 transition-colors"
+                                            className="absolute top-4 right-4 bg-black/50 backdrop-blur text-white text-[10px] font-semibold px-3 py-1.5 rounded-full border border-white/20 hover:bg-black/70 transition-colors"
                                         >
                                             ✕ Close
                                         </button>
@@ -260,7 +260,7 @@ const CourseDetail = () => {
                                                 <PlayCircle size={32} />
                                             </button>
                                             {hasPreview && (
-                                                <span className="mt-3 bg-black/50 backdrop-blur text-white text-[10px] font-bold px-4 py-1.5 rounded-full border border-white/20">
+                                                <span className="mt-3 bg-black/50 backdrop-blur text-white text-[10px] font-semibold px-4 py-1.5 rounded-full border border-white/20">
                                                     Click to preview
                                                 </span>
                                             )}
@@ -269,7 +269,7 @@ const CourseDetail = () => {
                                         {/* Level badge */}
                                         {currentCourse.level && (
                                             <div className="absolute top-4 left-4">
-                                                <span className={`px-3 py-1.5 rounded-full text-[10px] font-bold border backdrop-blur-md shadow-sm
+                                                <span className={`px-3 py-1.5 rounded-full text-[10px] font-semibold border backdrop-blur-md shadow-sm
                                                     ${currentCourse.level === 'Beginner'
                                                         ? 'bg-emerald-500/80 text-white border-emerald-400/30'
                                                         : currentCourse.level === 'Intermediate'
@@ -283,7 +283,7 @@ const CourseDetail = () => {
                                         {/* Discount badge */}
                                         {currentCourse.discount > 0 && (
                                             <div className="absolute top-4 right-4">
-                                                <span className="bg-indigo-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
+                                                <span className="bg-indigo-600 text-white text-[10px] font-semibold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1">
                                                     <Zap size={10} className="fill-current" /> {currentCourse.discount}% off
                                                 </span>
                                             </div>
@@ -298,7 +298,7 @@ const CourseDetail = () => {
                         <div className="flex-1 min-w-0 space-y-5">
 
                             {/* Title */}
-                            <h1 className="text-2xl md:text-4xl font-bold leading-tight tracking-tight text-slate-900">
+                            <h1 className="text-2xl md:text-4xl font-semibold leading-tight tracking-tight text-slate-900">
                                 {currentCourse.title}
                             </h1>
 
@@ -309,25 +309,25 @@ const CourseDetail = () => {
 
                             {/* Meta pills */}
                             <div className="flex flex-wrap items-center gap-2">
-                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-bold text-slate-700">
+                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-semibold text-slate-700">
                                     <Star className="text-amber-400" size={13} fill="currentColor" />
                                     <span>{avg}</span>
                                     <span className="text-slate-400">({currentCourse.ratingsQuantity || 0} reviews)</span>
                                 </div>
-                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-bold text-slate-700">
+                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-semibold text-slate-700">
                                     <Users size={12} className="text-indigo-600" />
                                     {currentCourse.enrolledStudents?.length || 0} enrolled
                                 </div>
-                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-bold text-slate-700">
+                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-semibold text-slate-700">
                                     <Clock size={12} className="text-purple-600" />
                                     {durationDisplay} video
                                 </div>
-                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-bold text-slate-700">
+                                <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-semibold text-slate-700">
                                     <BookOpen size={12} className="text-emerald-600" />
                                     {currentCourse.courseVideos?.length || 0} lessons
                                 </div>
                                 {currentCourse.language && (
-                                    <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-bold text-slate-700">
+                                    <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-[11px] font-semibold text-slate-700">
                                         <Globe size={12} className="text-sky-600" />
                                         {currentCourse.language}
                                     </div>
@@ -344,11 +344,11 @@ const CourseDetail = () => {
                                     />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Instructor</p>
-                                    <p className="text-sm font-bold text-slate-900">{currentCourse.teacher?.name}</p>
+                                    <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Instructor</p>
+                                    <p className="text-sm font-semibold text-slate-900">{currentCourse.teacher?.name}</p>
                                 </div>
                                 {currentCourse.teacher?.specialization && (
-                                    <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">
+                                    <span className="text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full">
                                         {currentCourse.teacher.specialization}
                                     </span>
                                 )}
@@ -359,13 +359,13 @@ const CourseDetail = () => {
                             {/* Price + CTA */}
                             <div className="flex flex-col sm:flex-row sm:items-end gap-4">
                                 <div>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Course Price</p>
+                                    <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Course Price</p>
                                     <div className="flex items-end gap-2">
-                                        <span className="text-3xl font-bold text-slate-900 tracking-tight">₹{currentCourse.finalPrice}</span>
+                                        <span className="text-3xl font-semibold text-slate-900 tracking-tight">₹{currentCourse.finalPrice}</span>
                                         {currentCourse.discount > 0 && (
                                             <>
-                                                <span className="text-sm text-slate-400 line-through font-bold mb-1">₹{currentCourse.price}</span>
-                                                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-lg mb-1">
+                                                <span className="text-sm text-slate-400 line-through font-semibold mb-1">₹{currentCourse.price}</span>
+                                                <span className="text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-lg mb-1">
                                                     Save {currentCourse.discount}%
                                                 </span>
                                             </>
@@ -377,14 +377,14 @@ const CourseDetail = () => {
                                     {isEnrolled ? (
                                         <Link
                                             to={`/watch/${id}`}
-                                            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-indigo-600/20 transition-all text-sm active:scale-95 whitespace-nowrap"
+                                            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-8 py-3.5 rounded-2xl shadow-lg shadow-indigo-600/20 transition-all text-sm active:scale-95 whitespace-nowrap"
                                         >
                                             Continue Learning <ChevronRight size={16} />
                                         </Link>
                                     ) : (
                                         <button
                                             onClick={handleEnroll}
-                                            className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-3.5 rounded-2xl shadow-lg transition-all text-sm active:scale-95 whitespace-nowrap"
+                                            className="flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-8 py-3.5 rounded-2xl shadow-lg transition-all text-sm active:scale-95 whitespace-nowrap"
                                         >
                                             Enroll Now <Zap size={15} className="fill-current" />
                                         </button>
@@ -400,7 +400,7 @@ const CourseDetail = () => {
                                     { icon: Trophy, color: 'text-amber-600', bg: 'bg-amber-50 border-amber-100', label: 'Certificate' },
                                     { icon: ShieldCheck, color: 'text-emerald-600', bg: 'bg-emerald-50 border-emerald-100', label: 'Lifetime access' },
                                 ].map(({ icon: Icon, color, bg, label }, i) => (
-                                    <div key={i} className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[11px] font-bold text-slate-700 ${bg}`}>
+                                    <div key={i} className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-[11px] font-semibold text-slate-700 ${bg}`}>
                                         <Icon size={13} className={color} />
                                         {label}
                                     </div>
@@ -420,7 +420,7 @@ const CourseDetail = () => {
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`relative pb-4 text-[11px] font-bold uppercase tracking-wider whitespace-nowrap transition-all
+                            className={`relative pb-4 text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap transition-all
                                 ${activeTab === tab ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
                         >
                             {tab === 'reviews'
@@ -448,15 +448,15 @@ const CourseDetail = () => {
                                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${bg}`}>
                                         <Icon size={16} className={iconCls} />
                                     </div>
-                                    <p className="text-xl font-bold text-slate-900">{value}</p>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
+                                    <p className="text-xl font-semibold text-slate-900">{value}</p>
+                                    <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{label}</p>
                                 </div>
                             ))}
                         </div>
 
                         {/* Full description */}
                         <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm">
-                            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-5">
+                            <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-5">
                                 <Info className="text-indigo-600" size={17} /> About this course
                             </h3>
                             <p className="text-slate-600 font-medium leading-[1.9] text-sm whitespace-pre-line">
@@ -466,7 +466,7 @@ const CourseDetail = () => {
 
                         {/* What you'll learn */}
                         <div>
-                            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-5">
+                            <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-5">
                                 <Award className="text-amber-500" size={17} /> What you'll learn
                             </h3>
                             <div className="grid sm:grid-cols-2 gap-3">
@@ -492,10 +492,10 @@ const CourseDetail = () => {
                 {activeTab === 'curriculum' && (
                     <div className="max-w-3xl space-y-6">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
                                 <Activity className="text-purple-600" size={17} /> Course Curriculum
                             </h3>
-                            <span className="text-[11px] font-bold text-slate-400">
+                            <span className="text-[11px] font-semibold text-slate-400">
                                 {currentCourse.courseVideos?.length || 0} lessons · {currentCourse.duration} hrs
                             </span>
                         </div>
@@ -506,14 +506,14 @@ const CourseDetail = () => {
                                     className="group flex items-center justify-between p-4 bg-white border border-slate-100 hover:border-indigo-100 rounded-2xl shadow-sm transition-all"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <span className="text-[10px] font-bold text-slate-300 w-5 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                                        <span className="text-[10px] font-semibold text-slate-300 w-5 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
                                         <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-sm">
                                             <PlayCircle size={17} />
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors tracking-tight">{video.title}</span>
+                                        <span className="text-sm font-semibold text-slate-700 group-hover:text-indigo-600 transition-colors tracking-tight">{video.title}</span>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-lg">
+                                        <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-lg">
                                             {Math.floor(video.duration / 60)}m {video.duration % 60}s
                                         </span>
                                         {!isEnrolled && <Lock size={13} className="text-slate-300" />}
@@ -527,7 +527,7 @@ const CourseDetail = () => {
                 {/* ── INSTRUCTOR ───────────────────────────────────────────── */}
                 {activeTab === 'instructor' && (
                     <div className="max-w-3xl">
-                        <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-6">
+                        <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-6">
                             <User className="text-indigo-600" size={17} /> Meet your instructor
                         </h3>
                         <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm">
@@ -544,9 +544,9 @@ const CourseDetail = () => {
                                 </div>
                                 <div className="flex-1 space-y-4">
                                     <div>
-                                        <h4 className="text-2xl font-bold text-slate-900 mb-0.5">{currentCourse.teacher?.name}</h4>
+                                        <h4 className="text-2xl font-semibold text-slate-900 mb-0.5">{currentCourse.teacher?.name}</h4>
                                         {currentCourse.teacher?.specialization && (
-                                            <p className="text-indigo-600 text-[11px] font-bold uppercase tracking-wider">{currentCourse.teacher.specialization}</p>
+                                            <p className="text-indigo-600 text-[11px] font-semibold uppercase tracking-wider">{currentCourse.teacher.specialization}</p>
                                         )}
                                     </div>
                                     {currentCourse.teacher?.bio && (
@@ -554,18 +554,18 @@ const CourseDetail = () => {
                                     )}
                                     <div className="flex gap-6 pt-4 border-t border-slate-100">
                                         <div>
-                                            <p className="text-xl font-bold text-slate-900">12k+</p>
-                                            <p className="text-[10px] font-bold text-slate-400 mt-0.5">Learners</p>
+                                            <p className="text-xl font-semibold text-slate-900">12k+</p>
+                                            <p className="text-[10px] font-semibold text-slate-400 mt-0.5">Learners</p>
                                         </div>
                                         {currentCourse.teacher?.experience && (
                                             <div>
-                                                <p className="text-xl font-bold text-slate-900">{currentCourse.teacher.experience}Y</p>
-                                                <p className="text-[10px] font-bold text-slate-400 mt-0.5">Experience</p>
+                                                <p className="text-xl font-semibold text-slate-900">{currentCourse.teacher.experience}Y</p>
+                                                <p className="text-[10px] font-semibold text-slate-400 mt-0.5">Experience</p>
                                             </div>
                                         )}
                                         <div>
-                                            <p className="text-xl font-bold text-slate-900">100%</p>
-                                            <p className="text-[10px] font-bold text-slate-400 mt-0.5">Rating</p>
+                                            <p className="text-xl font-semibold text-slate-900">100%</p>
+                                            <p className="text-[10px] font-semibold text-slate-400 mt-0.5">Rating</p>
                                         </div>
                                     </div>
                                 </div>
@@ -581,9 +581,9 @@ const CourseDetail = () => {
                         {/* Rating summary */}
                         <div className="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm flex flex-col sm:flex-row gap-6 items-center">
                             <div className="text-center flex-shrink-0">
-                                <p className="text-5xl font-bold text-slate-900 tracking-tight">{avg}</p>
+                                <p className="text-5xl font-semibold text-slate-900 tracking-tight">{avg}</p>
                                 <StarDisplay value={Number(avg)} size={18} />
-                                <p className="text-[11px] font-bold text-slate-400 mt-2">{currentCourse.ratingsQuantity || 0} ratings</p>
+                                <p className="text-[11px] font-semibold text-slate-400 mt-2">{currentCourse.ratingsQuantity || 0} ratings</p>
                             </div>
                             <div className="flex-1 w-full space-y-2">
                                 {[5, 4, 3, 2, 1].map(star => {
@@ -591,12 +591,12 @@ const CourseDetail = () => {
                                     const pct = reviews.length ? Math.round((count / reviews.length) * 100) : 0;
                                     return (
                                         <div key={star} className="flex items-center gap-3">
-                                            <span className="text-[11px] font-bold text-slate-500 w-3">{star}</span>
+                                            <span className="text-[11px] font-semibold text-slate-500 w-3">{star}</span>
                                             <Star size={11} className="text-amber-400" fill="currentColor" />
                                             <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
                                                 <div className="h-full bg-amber-400 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                                             </div>
-                                            <span className="text-[10px] font-bold text-slate-400 w-7">{pct}%</span>
+                                            <span className="text-[10px] font-semibold text-slate-400 w-7">{pct}%</span>
                                         </div>
                                     );
                                 })}
@@ -606,12 +606,12 @@ const CourseDetail = () => {
                         {/* Write review form */}
                         {isAuthenticated && isEnrolled && (
                             <div className="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm">
-                                <h4 className="text-sm font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                <h4 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
                                     <MessageCircle size={16} className="text-indigo-600" /> Write a Review
                                 </h4>
                                 <form onSubmit={handleSubmitReview} className="space-y-4">
                                     <div>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Your Rating</p>
+                                        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Your Rating</p>
                                         <StarRatingInput value={rating} onChange={setRating} />
                                     </div>
                                     <textarea
@@ -624,7 +624,7 @@ const CourseDetail = () => {
                                     <button
                                         type="submit"
                                         disabled={submitting}
-                                        className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold px-6 py-3 rounded-2xl transition-all text-sm active:scale-95 shadow-lg shadow-indigo-500/20"
+                                        className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold px-6 py-3 rounded-2xl transition-all text-sm active:scale-95 shadow-lg shadow-indigo-500/20"
                                     >
                                         {submitting ? 'Submitting...' : <><Send size={15} /> Submit Review</>}
                                     </button>
@@ -634,14 +634,14 @@ const CourseDetail = () => {
 
                         {!isAuthenticated && (
                             <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 text-center">
-                                <p className="text-sm font-bold text-indigo-700 mb-2">Sign in to leave a review</p>
-                                <Link to="/login" className="text-[11px] font-bold text-indigo-600 underline underline-offset-2">Go to Login →</Link>
+                                <p className="text-sm font-semibold text-indigo-700 mb-2">Sign in to leave a review</p>
+                                <Link to="/login" className="text-[11px] font-semibold text-indigo-600 underline underline-offset-2">Go to Login →</Link>
                             </div>
                         )}
 
                         {isAuthenticated && !isEnrolled && (
                             <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5 text-center">
-                                <p className="text-sm font-bold text-amber-700">Enroll in this course to write a review.</p>
+                                <p className="text-sm font-semibold text-amber-700">Enroll in this course to write a review.</p>
                             </div>
                         )}
 
@@ -655,7 +655,7 @@ const CourseDetail = () => {
                                 <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto mb-4 text-slate-300">
                                     <Star size={28} />
                                 </div>
-                                <p className="text-sm font-bold text-slate-600">No reviews yet</p>
+                                <p className="text-sm font-semibold text-slate-600">No reviews yet</p>
                                 <p className="text-[11px] text-slate-400 font-medium mt-1">Be the first to review this course!</p>
                             </div>
                         ) : (
@@ -672,7 +672,7 @@ const CourseDetail = () => {
                                     <button
                                         onClick={() => fetchReviews(reviewPage + 1)}
                                         disabled={reviewsLoading}
-                                        className="w-full py-4 bg-white border border-slate-200 rounded-2xl text-sm font-bold text-slate-600 hover:border-indigo-200 hover:text-indigo-600 transition-all disabled:opacity-50"
+                                        className="w-full py-4 bg-white border border-slate-200 rounded-2xl text-sm font-semibold text-slate-600 hover:border-indigo-200 hover:text-indigo-600 transition-all disabled:opacity-50"
                                     >
                                         {reviewsLoading ? 'Loading...' : 'Load more reviews'}
                                     </button>

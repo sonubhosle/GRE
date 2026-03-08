@@ -280,7 +280,7 @@ const WatchCourse = () => {
                                 <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
                                         <div className="lg:col-span-2">
-                                            <h1 className="text-3xl font-black text-slate-900 mb-6 tracking-tight leading-tight">{course.title}</h1>
+                                            <h1 className="text-3xl font-semibold text-slate-900 mb-6 tracking-tight leading-tight">{course.title}</h1>
 
                                             <div className="flex flex-wrap items-center gap-4 mb-8">
                                                 <span className="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold border border-indigo-100 uppercase tracking-wide">{course.category?.name}</span>
@@ -325,7 +325,7 @@ const WatchCourse = () => {
                                                         <span className="text-sm font-bold text-slate-900">{course.level}</span>
                                                     </div>
                                                     <div className="flex items-center justify-between border-t border-slate-200 pt-4 mt-4">
-                                                        <span className="text-sm font-bold text-slate-500 flex items-center gap-2 font-black"><Check size={14} /> Enrolled</span>
+                                                        <span className="text-sm font-bold text-slate-500 flex items-center gap-2 font-semibold"><Check size={14} /> Enrolled</span>
                                                         <span className="text-sm font-bold text-indigo-600">{course.enrolledStudents?.length || 0} Students</span>
                                                     </div>
                                                 </div>
@@ -348,7 +348,7 @@ const WatchCourse = () => {
                                                     onClick={() => { handleVideoSelect(video); setActiveTab('overview'); }}
                                                     className="flex-1 flex items-center gap-4"
                                                 >
-                                                    <span className="text-[10px] font-black text-slate-400 w-4">{i + 1}</span>
+                                                    <span className="text-[10px] font-semibold text-slate-400 w-4">{i + 1}</span>
                                                     <span className="flex-1 text-sm font-bold text-slate-700 truncate">{video.title}</span>
                                                 </button>
                                                 <button
@@ -380,7 +380,7 @@ const WatchCourse = () => {
                                                     <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors mb-4">
                                                         <FileText size={24} strokeWidth={1.5} />
                                                     </div>
-                                                    <p className="text-sm font-black text-slate-900 mb-2 leading-tight">{mat.title}</p>
+                                                    <p className="text-sm font-semibold text-slate-900 mb-2 leading-tight">{mat.title}</p>
                                                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
                                                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{mat.fileType || 'PDF'}</span>
                                                         <Download size={16} className="text-indigo-600 transition-transform group-hover:translate-y-0.5" />
@@ -393,7 +393,7 @@ const WatchCourse = () => {
                                             <div className="w-20 h-20 rounded-full bg-white mx-auto flex items-center justify-center shadow-sm mb-6">
                                                 <FileText size={32} className="text-slate-200" />
                                             </div>
-                                            <p className="text-slate-400 font-black uppercase tracking-widest">No resources found</p>
+                                            <p className="text-slate-400 font-semibold uppercase tracking-widest">No resources found</p>
                                         </div>
                                     )}
                                 </div>
@@ -408,15 +408,15 @@ const WatchCourse = () => {
                                             <img src={course.teacher?.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.teacher?.name)}&background=818cf8&color=fff&size=200`} alt={course.teacher?.name} className="w-full h-full object-cover shadow-inner" />
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="text-3xl font-black text-slate-900 mb-4 tracking-tight leading-none uppercase">{course.teacher?.name}</h4>
+                                            <h4 className="text-3xl font-semibold text-slate-900 mb-4 tracking-tight leading-none uppercase">{course.teacher?.name}</h4>
                                             <div className="flex flex-wrap gap-4 mb-8">
                                                 <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-slate-100 shadow-sm">
                                                     <Star size={14} className="text-amber-400 fill-amber-400" />
-                                                    <span className="text-xs font-black text-slate-700 uppercase tracking-tight">4.9 Rating</span>
+                                                    <span className="text-xs font-semibold text-slate-700 uppercase tracking-tight">4.9 Rating</span>
                                                 </div>
                                                 <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-slate-100 shadow-sm">
                                                     <PlayCircle size={14} className="text-indigo-600" />
-                                                    <span className="text-xs font-black text-slate-700 uppercase tracking-tight">{course.teacher?.enrolledStudents?.length || 0} Students</span>
+                                                    <span className="text-xs font-semibold text-slate-700 uppercase tracking-tight">{course.teacher?.enrolledStudents?.length || 0} Students</span>
                                                 </div>
                                             </div>
                                             <p className="text-slate-600 leading-relaxed font-bold text-lg max-w-2xl italic">

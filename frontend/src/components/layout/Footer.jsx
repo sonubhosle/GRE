@@ -15,8 +15,8 @@ const Footer = () => {
                             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
                                 <Zap size={22} className="text-white fill-current" />
                             </div>
-                            <span className="text-xl font-bold text-slate-900 tracking-tight">
-                                Cours<span className="text-indigo-600">ify</span>
+                            <span className="text-xl font-semibold text-slate-900 tracking-tight">
+                                Edu<span className="text-indigo-600">Platform</span>
                             </span>
                         </Link>
                         <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xs">
@@ -33,13 +33,18 @@ const Footer = () => {
 
                     {/* platform */}
                     <div>
-                        <h4 className="text-xs font-bold text-slate-900 mb-10">Platform architecture</h4>
+                        <h4 className="text-xs font-semibold text-slate-900 mb-10 text-center ">Platform architecture</h4>
                         <ul className="space-y-5">
-                            {['Academy Directory', 'Elite Categories', 'Instructor Portal', 'Revenue Dashboard'].map(item => (
-                                <li key={item}>
-                                    <Link to="#" className="text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium flex items-center gap-2 group">
+                            {[
+                                { name: 'Academy Directory', link: '/courses' },
+                                { name: 'Elite Categories', link: '/courses' },
+                                { name: 'Instructor Portal', link: '/become-teacher' },
+                                { name: 'Revenue Dashboard', link: '/teacher/dashboard' }
+                            ].map(item => (
+                                <li key={item.name}>
+                                    <Link to={item.link} className="text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium flex items-center gap-2 group">
                                         <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                                        {item}
+                                        {item.name}
                                     </Link>
                                 </li>
                             ))}
@@ -48,13 +53,18 @@ const Footer = () => {
 
                     {/* support */}
                     <div>
-                        <h4 className="text-xs font-bold text-slate-900 mb-10">Core support</h4>
+                        <h4 className="text-xs font-semibold text-slate-900 mb-10">Core support</h4>
                         <ul className="space-y-5">
-                            {['Technical Hub', 'Service Protocol', 'Privacy Shield', 'Contact Secure'].map(item => (
-                                <li key={item}>
-                                    <Link to="#" className="text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium flex items-center gap-2 group">
+                            {[
+                                { name: 'Technical Hub', link: '/contact' },
+                                { name: 'Service Protocol', link: '/contact' },
+                                { name: 'Privacy Shield', link: '/contact' },
+                                { name: 'Contact Secure', link: '/contact' }
+                            ].map(item => (
+                                <li key={item.name}>
+                                    <Link to={item.link} className="text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium flex items-center gap-2 group">
                                         <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                                        {item}
+                                        {item.name}
                                     </Link>
                                 </li>
                             ))}
@@ -63,13 +73,13 @@ const Footer = () => {
 
                     {/* newsletter */}
                     <div>
-                        <h4 className="text-xs font-bold text-slate-900 mb-10">Intelligence updates</h4>
+                        <h4 className="text-xs font-semibold text-slate-900 mb-10">Intelligence updates</h4>
                         <p className="text-slate-400 text-xs font-medium leading-relaxed mb-6">Subscribe to receive high-signal intelligence and protocol updates.</p>
                         <div className="relative group">
                             <input
                                 type="email"
                                 placeholder="Protocol email"
-                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-6 pr-14 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/30 transition-all font-bold"
+                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-6 pr-14 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/30 transition-all font-semibold"
                             />
                             <button className="absolute right-2 top-2 w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 transition-all shadow-lg active:scale-90">
                                 <ArrowRight size={18} />
@@ -79,14 +89,14 @@ const Footer = () => {
                 </div>
 
                 <div className="pt-16 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
-                    <p className="text-[10px] font-bold text-slate-400 font-sans">
-                        © {new Date().getFullYear()} Coursify core. Protocol active.
+                    <p className="text-[10px] font-semibold text-slate-400 font-sans tracking-widest uppercase">
+                        © {new Date().getFullYear()} EduPlatform Core. Protocol active.
                     </p>
                     <div className="flex items-center gap-10">
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
+                        <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-widest">
                             <Globe size={14} className="text-indigo-600/50" /> V2.5.0-STABLE
                         </div>
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400">
+                        <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-400 tracking-widest">
                             <Shield size={14} className="text-emerald-600/50" /> AES-256 ENCRYPTED
                         </div>
                     </div>

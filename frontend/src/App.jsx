@@ -13,6 +13,8 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
+import ResetPassword from './pages/auth/ResetPassword';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import StudentDashboard from './pages/student/Dashboard';
@@ -33,6 +35,9 @@ import AdminCoupons from './pages/admin/Coupons';
 import AdminLayout from './components/layout/AdminLayout';
 import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
+import BecomeTeacher from './pages/BecomeTeacher';
+import Contact from './pages/Contact';
+import NotFound from './pages/NotFound';
 import { ProtectedRoute, PublicRoute } from './components/common/RouteGuards';
 
 const AppContent = () => {
@@ -58,7 +63,12 @@ const AppContent = () => {
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
           </Route>
+
+          <Route path="/become-teacher" element={<BecomeTeacher />} />
+          <Route path="/contact" element={<Contact />} />
 
           {/* Protected Student Routes */}
           <Route element={<ProtectedRoute allowedRoles={['USER']} />}>
@@ -97,7 +107,7 @@ const AppContent = () => {
             <Route path="/checkout/:id" element={<Checkout />} />
           </Route>
 
-          <Route path="*" element={<div className="container py-20 text-center"><h1>404 - Not Found</h1></div>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {!hideLayout && <Footer />}

@@ -5,7 +5,7 @@ import {
     Ticket, Plus, Trash2, Loader2, X,
     ChevronRight, Calculator, Calendar, Activity,
     Zap, Search, Filter, TrendingUp, Sparkles,
-    CheckCircle2, Clock
+    CheckCircle2, Clock, MoreVertical
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -158,7 +158,7 @@ const CouponManagement = () => {
                                     </td>
                                     <td className="px-10 py-8">
                                         <div className="flex flex-col items-center">
-                                            <span className="text-2xl font-black text-slate-900 tracking-tighter">{coupon.discountPercentage}%</span>
+                                            <span className="text-2xl font-semibold text-slate-900 tracking-tighter">{coupon.discountPercentage}%</span>
                                             <span className="text-[10px] font-extrabold text-emerald-500 uppercase tracking-widest">Off MSRP</span>
                                         </div>
                                     </td>
@@ -229,7 +229,7 @@ const CouponManagement = () => {
                             <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-amber-500/30 rotate-12 ring-4 ring-white">
                                 <Ticket className="text-white w-12 h-12 -rotate-12" />
                             </div>
-                            <h2 className="text-4xl font-black text-slate-900 tracking-tighter">Mint <span className="text-amber-500 underline decoration-amber-100 underline-offset-8">Promo</span></h2>
+                            <h2 className="text-4xl font-semibold text-slate-900 tracking-tighter">Mint <span className="text-amber-500 underline decoration-amber-100 underline-offset-8">Promo</span></h2>
                             <p className="text-slate-500 text-sm font-bold uppercase tracking-widest mt-3">Initialize new strategic campaign</p>
                         </div>
 
@@ -238,7 +238,7 @@ const CouponManagement = () => {
                                 <label className="text-[11px] font-extrabold text-slate-400 uppercase tracking-widest ml-1">Universal Access Code</label>
                                 <input
                                     type="text"
-                                    className="w-full bg-slate-50 border-2 border-slate-50 focus:border-amber-400/50 rounded-3xl py-6 px-8 text-slate-900 placeholder-slate-200 focus:outline-none focus:ring-8 focus:ring-amber-500/5 transition-all font-mono font-black text-3xl text-center tracking-[0.2em] shadow-inner"
+                                    className="w-full bg-slate-50 border-2 border-slate-50 focus:border-amber-400/50 rounded-3xl py-6 px-8 text-slate-900 placeholder-slate-200 focus:outline-none focus:ring-8 focus:ring-amber-500/5 transition-all font-mono font-semibold text-3xl text-center tracking-[0.2em] shadow-inner"
                                     required
                                     placeholder="GLOBAL50"
                                     value={formData.code}
@@ -254,13 +254,13 @@ const CouponManagement = () => {
                                     <div className="relative">
                                         <input
                                             type="number"
-                                            className="w-full bg-slate-50 border border-slate-100 focus:border-amber-300 rounded-2xl py-5 px-6 text-slate-900 placeholder-slate-300 focus:outline-none transition-all font-black text-2xl shadow-sm"
+                                            className="w-full bg-slate-50 border border-slate-100 focus:border-amber-300 rounded-2xl py-5 px-6 text-slate-900 placeholder-slate-300 focus:outline-none transition-all font-semibold text-2xl shadow-sm"
                                             required
                                             placeholder="20"
                                             value={formData.discountPercentage}
                                             onChange={e => setFormData({ ...formData, discountPercentage: e.target.value })}
                                         />
-                                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 font-black text-xl">%</span>
+                                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 font-semibold text-xl">%</span>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
@@ -269,7 +269,7 @@ const CouponManagement = () => {
                                     </label>
                                     <input
                                         type="number"
-                                        className="w-full bg-slate-50 border border-slate-100 focus:border-amber-300 rounded-2xl py-5 px-6 text-slate-900 placeholder-slate-300 focus:outline-none transition-all font-black text-2xl shadow-sm"
+                                        className="w-full bg-slate-50 border border-slate-100 focus:border-amber-300 rounded-2xl py-5 px-6 text-slate-900 placeholder-slate-300 focus:outline-none transition-all font-semibold text-2xl shadow-sm"
                                         required
                                         placeholder="500"
                                         value={formData.maxUsage}
@@ -294,7 +294,7 @@ const CouponManagement = () => {
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-7 rounded-[2.5rem] shadow-2xl shadow-amber-500/20 transition-all flex items-center justify-center gap-4 disabled:opacity-50 uppercase tracking-[0.3em] text-xs active:scale-95 border-b-4 border-amber-700 hover:border-b-2 hover:translate-y-0.5"
+                                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-7 rounded-[2.5rem] shadow-2xl shadow-amber-500/20 transition-all flex items-center justify-center gap-4 disabled:opacity-50 uppercase tracking-[0.3em] text-xs active:scale-95 border-b-4 border-amber-700 hover:border-b-2 hover:translate-y-0.5"
                             >
                                 {submitting ? <Loader2 size={24} className="animate-spin" /> : <><CheckCircle2 size={24} /> Mint Campaign</>}
                                 {!submitting && <ChevronRight size={24} />}
