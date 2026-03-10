@@ -61,8 +61,8 @@ const createCourse = catchAsync(async (req, res) => {
         language: language || 'English',
         tags: Array.isArray(tags) ? tags : tags?.split(',').map((t) => t.trim()) || [],
         teacher: req.user._id,
-        approvalStatus: req.user.role === 'ADMIN' ? 'approved' : 'pending',
-        isPublished: req.user.role === 'ADMIN' ? true : false,
+        approvalStatus: 'approved',
+        isPublished: true,
     };
 
     if (req.files) {
